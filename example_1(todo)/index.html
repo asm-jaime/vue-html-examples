@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>todo</title>
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@next/dist/css/bootstrap.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <style type="text/css">
+    .todo {
+      background: aliceblue;
+      border-radius: 10px;
+      margin: 20px;
+      padding: 20px;
+      max-width: 400px;
+      box-shadow: grey 3px 3px 20px;
+    }
+    .table {
+      background: white;
+      margin-top: 30px;
+      box-shadow: grey 3px 3px 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="todo">
+    <h2> {{ title }} </h2>
+    <form v-on:submit.prevent="addTodo" class="form-horizontal">
+      <div class="row justify-content-end">
+        <b-form-input type="text" placeholder="enter todo" v-model="todo"></b-form-input>
+        <b-button type="submit" style="">add todo</b-button>
+      </div>
+    <b-table hover :items="todos" :fields="fields" class="table">
+      <template slot="actions" scope="item" style="text-align: right;">
+        <b-button size="sm" @click="del(item.index)"><i class="fa fa-close"></i></b-button>
+      </template>
+    </b-table>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js"></script>
+  <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/tether@latest/dist/js/tether.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+
+  <script>
+    const todo = new Vue({
+      el: "#app",
+      data: {
+        title: "todo",
+        fields: {
+          name: {
+            label: 'name',
+            sortable: true
+          },
+          actions: {
+            label: 'action'
+          },
+        },
+        todo: "",
+        todos : [
+          { name: "do nothing" },
+          { name: "do something" },
+        ],
+      },
+      methods: {
+        addTodo: function() {
+          this.todos.push({ name: this.todo });
+        },
+        del: function(index) {
+          this.todos.splice(index, 1);
+        },
+      },
+    });
+  </script>
+</body>
+
+</html>
