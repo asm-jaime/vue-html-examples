@@ -24,51 +24,38 @@
 
 <body>
   <div id="app" class="todo">
-    <h2> {{ title }} </h2>
-    <form v-on:submit.prevent="addTodo" class="form-horizontal">
-      <div class="row justify-content-end">
-        <b-form-input type="text" placeholder="enter todo" v-model="todo"></b-form-input>
-        <b-button type="submit" style="">add todo</b-button>
-      </div>
-    <b-table hover :items="todos" :fields="fields" class="table">
-      <template slot="actions" scope="item" style="text-align: right;">
-        <b-button size="sm" @click="del(item.index)"><i class="fa fa-close"></i></b-button>
-      </template>
-    </b-table>
-    </form>
+    <b-button @click="request">request</b-button>
+    <div>{{ result }}</div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.1/vue-resource.min.js"></script>
+
   <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
   <script src="https://unpkg.com/tether@latest/dist/js/tether.min.js"></script>
   <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
   <script>
+    Vue.use(VueResource);
+
     const todo = new Vue({
       el: "#app",
-      data: {
-        title: "todo",
-        fields: {
-          name: {
-            label: 'name',
-            sortable: true
-          },
-          actions: {
-            label: 'action'
-          },
-        },
-        todo: "",
-        todos : [
-          { name: "do nothing" },
-          { name: "do something" },
-        ],
+      data() {
+        let result = "no data";
+        return {
+          result,
+        }
+      },
+      mounted: function(){
+        console.log('we mounted');
       },
       methods: {
-        addTodo: function() {
-          this.todos.push({ name: this.todo });
-        },
-        del: function(index) {
-          this.todos.splice(index, 1);
+        request: function() {
+          Vue.resource(`http://localhost:8081/api/v1/points/near`)
+            .get({ scope: 1000000, type: "Point", lng: 58.859223547066584, lat: 125.68349375 })
+            .then(res =>{
+              this.result = res.body.body;
+            });
         },
       },
     });
